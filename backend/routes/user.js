@@ -33,9 +33,8 @@ router.post("/signup", async function (req, res) {
 
   await Account.create({
     userId: user._id,
-    balance: 1 + Math.random() * 10000
-  })
-
+    balance: 1 + Math.random() * 10000,
+  });
 
   const token = jwt.sign(
     {
@@ -120,8 +119,15 @@ router.get("/bulk", async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       _id: user._id,
-    })),  
+    })),
   });
 });
 
+router.get("/me", authMiddleware, async (req, res) => {
+  const user = await User.findOne({ _id: req.userId });
+  res.status(300).json({
+    message: "Your token is valid",
+    firstName: user.firstName,
+  });
+});
 module.exports = router;
